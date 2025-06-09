@@ -1,0 +1,5 @@
+- Après un mot de retour (break...) qui n'accepte aucun mot clef après, alors colorier le texte en rouge
+- Colorier les noms de variables (règle: on colorie jusqu'à "=")
+- Colorier les noms de fonctions (règle: entre un mot clef de )
+- Implementer un ctrl+z avec une pile
+- Fonctionnalités de recherche de motifs dans un texte

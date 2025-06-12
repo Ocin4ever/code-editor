@@ -14,7 +14,19 @@ class SyntaxHighlighter:
         }
     
     def highlight(self, text_widget, language):
-        """Coloration basique"""
+        """
+        Coloration basique
+
+        Complexité temporelle : O(n * m + n) = O(n * m)
+            n : longueur du texte
+            m : nombre de motifs de coloration (5 pour Python)
+        Pour chaque motif, re.finditer parcourt tout le texte (O(n) par motif).
+        Plus un appel à _highlight_parens en O(n)
+
+        Complexité spatiale : O(n)
+        Stocke les positions des correspondances et applique des tags.
+        """
+
         if language not in self.patterns:
             return
             
@@ -31,7 +43,15 @@ class SyntaxHighlighter:
         self._highlight_parens(text_widget, text)
     
     def _highlight_parens(self, text_widget, text):
-        """Coloration des parenthèses selon leur état (fermées ou non)"""
+        """
+        Coloration des parenthèses selon leur état (fermées ou non)
+        
+        Complexité temporelle : O(n)
+        Parcourt le texte une fois pour gérer les parenthèses.
+
+        Complexité spatiale : O(n) (dans le pire cas, si toutes les parenthèses sont ouvrantes).
+        """
+
         stack = []
         for i, char in enumerate(text):
             if char == '(':

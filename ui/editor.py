@@ -61,7 +61,16 @@ class CodeEditor(tk.Frame):
         self.text.bind("<Control-Y>", self._redo)
     
     def snapshot(self):
-        """Prend une capture du texte actuel, utile pour undo/redo"""
+        """
+        Prend une capture du texte actuel, utile pour undo/redo
+        
+        Complexité temporelle : O(n)
+        n : longueur du texte (lecture via get).
+
+        Complexité spatiale : O(n)
+        Stocke une copie du texte et la position du curseur.
+        """
+
         content = self.text.get("1.0", "end-1c")
         cursor_pos = self.text.index("insert")
         if not self.undo_stack or self.undo_stack[-1] != (content, cursor_pos):
@@ -69,7 +78,15 @@ class CodeEditor(tk.Frame):
             self.redo_stack.clear()
     
     def _undo(self, event=None):
-        """Annule la dernière action"""
+        """
+        Annule la dernière action
+        
+        Complexité temporelle : O(n + n + k + n * m) = O(n * m)
+        delete et insert sont en O(n).
+        l'appel à stack est en O(k) avec k: la taille de la pile
+        highlight est appelée en (O(n * m)).
+        """
+
         if len(self.undo_stack) > 1:
             # Déplacer l'état actuel vers redo
             current = self.undo_stack.pop()
@@ -85,7 +102,15 @@ class CodeEditor(tk.Frame):
         return "break"
     
     def _redo(self, event=None):
-        """Rétablit la dernière action annulée"""
+        """
+        Rétablit la dernière action annulée
+        
+        Complexité temporelle : O(n + n + k + n * m) = O(n * m)
+        delete et insert sont en O(n).
+        l'appel à stack est en O(k) avec k : la taille de la pile
+        highlight est appelée en (O(n * m)).
+        """
+
         if self.redo_stack:
             current = (self.text.get("1.0", "end-1c"), self.text.index("insert"))
             self.undo_stack.append(current)
@@ -100,7 +125,15 @@ class CodeEditor(tk.Frame):
         return "break"
     
     def _handle_return(self, event):
-        """Gestion robuste de l'indentation avec correction du problème return/break"""
+        """
+        Gestion de l'indentation
+        
+        Complexité temporelle : O(n * m + k)
+        re.match et get en O(k) : longueur de la ligne
+        snapshot est en O(n)
+        highlight est en O(n * m) avec le nb de motif (5 ici)
+        """
+
         self.snapshot()
         cursor_pos = self.text.index("insert")
         line, col = map(int, cursor_pos.split('.'))
